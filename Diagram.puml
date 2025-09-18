@@ -1,0 +1,141 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+class OrderResponse {
+    tracking_id : UUID
+    nbr_of_payment : Integer
+    status : boolean
+    delivery_date : LocalTime
+    supplier_email : String
+    supplier_phone : String
+    tracking_id_supplier : UUID
+}
+
+class Orders {
+    order_id : Long
+    tracking_id : UUID
+    supplier_id : Long
+    delivery_date : LocalTime
+    status : boolean
+    nbr_of_payment : Integer
+    price : Float
+
+    +create(OrderRequest request) : OrderResponse
+    +getAll() : List<OrderResponse>
+}
+
+
+
+
+
+abstract class Users {
+}
+
+class Pharmacists {
+}
+
+class Customers {
+}
+
+class Medicines {
+}
+
+class SoldItems {
+}
+
+class Prescriptions {
+}
+
+class PrescriptedItems {
+}
+
+class Sales {
+}
+
+abstract class Invoices {
+}
+
+class CustomerInvoices {
+}
+
+class SupplierInvoices {
+}
+
+class Suppliers {
+    supplier_id : Long
+    supplier_name : String
+    address : String
+    email : String
+    payment_term : Integer
+    payment_type : String[CARD, CASH, MOBILE_MONEY]
+}
+
+class Admins {
+}
+
+class Stocks {
+}
+
+class StockItems {
+}
+
+class Payments {
+}
+
+class OrderedMedicines {
+}
+
+class CategoryMedicines {
+    category_id : Long
+    name : String
+    tracking_id : UUID
+    description : String
+
+    +create(CategoryRequest request) : CategoryResponse
+    +getAll() : List<CategoryResponse>
+    +get(tracking_id : UUID) : CategoryResponse
+    +update(tracking_id : UUID, request : CategoryRequest) : CategoryResponse
+    +delete(tracking_id : UUID)
+    +getByName(name : String) : CategoryResponse
+}
+
+class CategoryRequest {
+    name : String
+    description : String
+}
+
+class CategoryResponse {
+    tracking_id : UUID
+    name : String
+    description : String
+}
+
+CategoryMedicines "1" -- "*" Medicines
+SoldItems "*" -- "1" Sales
+Suppliers "1" -- "*" Orders
+OrderedMedicines "*" -- "1" Orders
+OrderedMedicines "*" -- "1" Medicines
+Orders "1" -- "*" Payments
+SupplierInvoices "1" -- "1" Payments
+StockItems "*" -- "1" Medicines
+StockItems "*" -- "1" Stocks
+SoldItems "*" -- "1" Medicines
+Prescriptions "*" -- "1" Customers
+Prescriptions "1" -- "*" PrescriptedItems : contains
+PrescriptedItems "*" -- "1" Medicines : is_In
+CustomerInvoices "1" -- "1"
+Sales "*" -- "1" Pharmacists
+Sales "*" -- "1" Prescriptions
+
+Users <|-- Pharmacists
+Users <|-- Customers
+Users <|-- Admins
+Invoices <|-- CustomerInvoices
+Invoices <|-- SupplierInvoices
+
+
+@enduml
+
+
+
